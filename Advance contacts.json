@@ -1,0 +1,264 @@
+{
+  "name": "Advance contacts",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2649afde-c65d-4b7b-8698-19e77e570505",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "={\n\"name\": \"ContactAgent\",\n\"description\": \"Manages contact information, including searching, updating, creating, and deleting\ncontacts.\",\n\"instructions\": [\n\"**Search Operation:** Retrieve contact details based on provided criteria (e.g., name, email,\nphone number). Accurately return all matching contact records, including for queries involving\nmultiple users.\",\n\"**Update Operation:** Modify existing contact information. Precisely identify the target contact(s)\nand apply specified changes to their fields. This applies to single or multiple contact updates within a\nquery.\",\n\"**Create Operation:** Add new contact entries to the database. Ensure all provided details are\naccurately stored. This applies to single or multiple contact creations within a query.\",\n\"**Delete Operation:** Remove specified contact(s) from the database. Precisely identify the\ncontact(s) to be deleted and confirm their removal. This applies to single or multiple contact deletions\nwithin a query.\",\n\"Process all input queries to accurately identify the intended operation (search, update, create, or\ndelete) and extract all relevant contact data or search parameters, even when multiple users or\ncontacts are specified.\",\n\"Confirm successful operations or provide clear error messages if an operation fails or a contact\ncannot be found/modified. Ensure accurate responses for all processed contacts.\"\n]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0c27f526-1bac-418d-b93e-8641c5963669",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "388cc89d-8a4b-43f9-84c2-b62f1238d2d3",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rwXLxx9OO3QhyTuj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "fields": [
+          "names",
+          "phoneNumbers",
+          "emailAddresses"
+        ],
+        "useQuery": true,
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        368,
+        224
+      ],
+      "id": "cbd143c6-d6f4-44e1-871c-ba4641520b26",
+      "name": "search contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "KKt330pMAOYL6Wqg",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "familyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Family_Name', ``, 'string') }}",
+        "givenName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Given_Name', ``, 'string') }}",
+        "additionalFields": {
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('emailsValues0_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "phoneUi": {
+            "phoneValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phoneValues0_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        496,
+        208
+      ],
+      "id": "880c3d0a-b67e-493c-8f2d-88d5f9b04152",
+      "name": "create contact",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "KKt330pMAOYL6Wqg",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "contactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', ``, 'string') }}",
+        "fields": [
+          "names",
+          "phoneNumbers",
+          "emailAddresses"
+        ],
+        "updateFields": {
+          "familyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Family_Name', ``, 'string') }}",
+          "givenName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Given_Name', ``, 'string') }}",
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('emailsValues0_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "phoneUi": {
+            "phoneValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phoneValues0_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        608,
+        224
+      ],
+      "id": "48480589-e247-45b8-bf2d-deff321449a4",
+      "name": "update contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "KKt330pMAOYL6Wqg",
+          "name": "Google Contacts account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "contactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        736,
+        224
+      ],
+      "id": "b3cf426d-b5c1-4bac-8734-71e900d045ed",
+      "name": "delete contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "KKt330pMAOYL6Wqg",
+          "name": "Google Contacts account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create contact": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b0b4c99-66d9-49c0-9913-f096d14c4e11",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6289ac8a43c26f964a95f062985d9238d041200763ec42797afc55179f603fc8"
+  },
+  "id": "FyPWDwtmTbOFs0Gv",
+  "tags": []
+}

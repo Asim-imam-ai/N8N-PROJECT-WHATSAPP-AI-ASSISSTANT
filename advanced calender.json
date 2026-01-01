@@ -1,0 +1,260 @@
+{
+  "name": "advanced calender",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "003a0461-e22d-47d2-81be-f65b83fe44b3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "={\n\"name\": \"CalendarAgent\",\n\"description\": \"Manages calendar events, including creation, updates, searches, and deletions.\",\n\"instructions\": [\n\"**Create Event Operation:** Accurately create new calendar events based on user requests.\nExtract all necessary details such as event title, date, time, duration, attendees, and location.\",\n\"**Update Event Operation:** Modify existing calendar events. Precisely identify the target event(s)\nand apply specified changes to event details like time, date, attendees, or title.\",\n\"**Search Event Operation:** Retrieve calendar events based on provided criteria (e.g., date range,\nkeywords, attendees). Return all matching event details.\",\n\"**Delete Event Operation:** Remove specified calendar event(s). Precisely identify the event(s) to\nbe deleted and confirm removal.\",\n\"Process all input queries to accurately identify the intended operation (create, update, search, or\ndelete) and extract all relevant event data or parameters.\",\n\"Confirm successful operations or provide clear error messages if an operation fails or an event\ncannot be found/modified. Ensure accurate responses for all processed requests.\"\n],\n\"additional_information\": {\n\"current_datetime\": \"{{ $now.toString() }}\"\n\n}\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0dd47426-a368-4b73-b1f4-eaa039ae8c55",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "7d3bfba3-cfd8-4ec5-ba71-92920886bdde",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rwXLxx9OO3QhyTuj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "asimimam.agenticai@gmail.com",
+          "mode": "list",
+          "cachedResultName": "asimimam.agenticai@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        224
+      ],
+      "id": "c62c3f47-1736-4e8a-afc3-4e4e5a745403",
+      "name": "create",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QU8I7NHDWNZiZ5B7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "asimimam.agenticai@gmail.com",
+          "mode": "list",
+          "cachedResultName": "asimimam.agenticai@gmail.com"
+        },
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        224
+      ],
+      "id": "766c4330-eb2b-4f58-987a-b2cd484c503f",
+      "name": "search",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QU8I7NHDWNZiZ5B7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "asimimam.agenticai@gmail.com",
+          "mode": "list",
+          "cachedResultName": "asimimam.agenticai@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "useDefaultReminders": "",
+        "updateFields": {
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        224
+      ],
+      "id": "f1125c78-14be-4db6-96c3-aabd94eb8fd0",
+      "name": "update",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QU8I7NHDWNZiZ5B7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "asimimam.agenticai@gmail.com",
+          "mode": "list",
+          "cachedResultName": "asimimam.agenticai@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        224
+      ],
+      "id": "e0f6488e-471f-414a-a243-c18b785437d5",
+      "name": "delete",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QU8I7NHDWNZiZ5B7",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "delete all the event of today"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "df97fc44-e552-43b0-8621-4f4ad7a6592a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6289ac8a43c26f964a95f062985d9238d041200763ec42797afc55179f603fc8"
+  },
+  "id": "NmJnrfVYKRhfchnf",
+  "tags": []
+}

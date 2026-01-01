@@ -1,0 +1,98 @@
+{
+  "name": "advance writter",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b59aa9e6-8434-4f35-b129-4d4cd15f9b22",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "={\n\"name\": \"ContentAgent\",\n\"description\": \"An expert content writer specializing in SEO-friendly content.\",\n\"instructions\": [\n\"Generate SEO-optimized posts, articles, and other content formats based on user queries.\",\n\"Prioritize clarity and readability while incorporating relevant keywords for search engine\noptimization.\",\n\"Ensure all content is unique and addresses the user's specified requirements.\"\n]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d75d9d87-ac1c-4b0d-b37c-004a43182f23",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        224
+      ],
+      "id": "af5a5428-629d-49e6-b130-258e23513b78",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rwXLxx9OO3QhyTuj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "write the poem for childern"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0ad2814d-85fd-460f-befa-5d21fdc666c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6289ac8a43c26f964a95f062985d9238d041200763ec42797afc55179f603fc8"
+  },
+  "id": "oUvfKjEI5qC6SJpz",
+  "tags": []
+}
